@@ -15,6 +15,8 @@ final class Module_Birthday extends GDO_Module
 {
     public function getDependencies() { return ['Profile', 'Friends']; }
     
+    public function onLoadLanguage() { return $this->loadLanguage('lang/birthday'); }
+    
     public function getConfig()
     {
         return [
