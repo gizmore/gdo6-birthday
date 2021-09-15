@@ -69,7 +69,7 @@ final class Module_Birthday extends GDO_Module
         return GDT_Response::makeWith(
             GDT_AgeCheck::make()->
             minAge($minAge)->errorMinAge())
-        ->code(403);
+            ->code(403);
     }
     
     public function agecheckIsMethodExcepted()
