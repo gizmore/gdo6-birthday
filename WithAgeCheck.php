@@ -2,12 +2,13 @@
 namespace GDO\Birthday;
 
 use GDO\User\GDO_User;
-use GDO\Date\Time;
+use GDO\Core\Application;
 
 /**
  * Use and Implement agecheckAge.
  * @author gizmore
- * @version 6.10.4
+ * @version 6.10.5
+ * @since 6.10.4
  */
 trait WithAgeCheck
 {
@@ -23,12 +24,16 @@ trait WithAgeCheck
     
     protected function agecheckBeforeExecute()
     {
-        if (!$this->agecheckTest())
+        $app = Application::instance();
+        if ( (!$app->isInstall()) && (!$app->isCLI()) )
         {
-            $minAge = $this->agecheckAge();
-            return $this->error('err_age_verify', [
-                $minAge,
-            ])->addField(GDT_AgeCheck::make()->minAge($minAge));
+            if (!$this->agecheckTest())
+            {
+                $minAge = $this->agecheckAge();
+                return $this->error('err_age_verify', [
+                    $minAge,
+                ])->addField(GDT_AgeCheck::make()->minAge($minAge));
+            }
         }
     }
     

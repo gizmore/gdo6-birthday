@@ -9,6 +9,7 @@ use GDO\User\GDO_User;
 use GDO\Date\Time;
 use GDO\Session\GDO_Session;
 use GDO\Core\GDT_Response;
+use GDO\Core\Application;
 
 /**
  * Birthday module.
@@ -114,16 +115,20 @@ final class Module_Birthday extends GDO_Module
     #############
     public function hookBeforeExecute()
     {
-        $user = GDO_User::current();
-        if (!$user->isStaff())
+        $app = Application::instance();
+        if ( (!$app->isInstall()) && (!$app->isCLI()) )
         {
-            if ($minAge = $this->cfgGlobalMinAge())
+            $user = GDO_User::current();
+            if (!$user->isStaff())
             {
-                if (!$this->agecheckIsMethodExcepted())
+                if ($minAge = $this->cfgGlobalMinAge())
                 {
-                    if (!$this->agecheckGlobal($minAge))
+                    if (!$this->agecheckIsMethodExcepted())
                     {
-                        return $this->agecheckDisplay($minAge);
+                        if (!$this->agecheckGlobal($minAge))
+                        {
+                            return $this->agecheckDisplay($minAge);
+                        }
                     }
                 }
             }
