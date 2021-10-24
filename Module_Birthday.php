@@ -17,7 +17,7 @@ use GDO\Core\Application;
  * - Age verification for methods and global.
  * 
  * @author gizmore
- * @version 6.10.4
+ * @version 6.10.6
  * @since 6.10.1
  */
 final class Module_Birthday extends GDO_Module
@@ -75,10 +75,11 @@ final class Module_Birthday extends GDO_Module
     
     public function agecheckIsMethodExcepted()
     {
-        $mome = mo() . '::' . me();
+        $mome = strtolower(mo() . '::' . me());
         $exceptions = [
-            'Language::GetTransData',
-            'Birthday::VerifyAge',
+            'language::gettransdata',
+            'birthday::verifyage',
+            'login::form',
         ];
         return in_array($mome, $exceptions, true);
     }
