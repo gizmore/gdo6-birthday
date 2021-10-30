@@ -3,6 +3,7 @@ namespace GDO\Birthday;
 
 use GDO\Core\GDO_Module;
 use GDO\DB\GDT_Checkbox;
+use GDO\Form\GDT_Form;
 use GDO\Friends\GDT_ACL;
 use GDO\DB\GDT_UInt;
 use GDO\User\GDO_User;
@@ -10,6 +11,7 @@ use GDO\Date\Time;
 use GDO\Session\GDO_Session;
 use GDO\Core\GDT_Response;
 use GDO\Core\Application;
+use GDO\Register\GDO_UserActivation;
 
 /**
  * Birthday module.
@@ -77,8 +79,9 @@ final class Module_Birthday extends GDO_Module
     {
         $mome = strtolower(mo() . '::' . me());
         $exceptions = [
-            'language::gettransdata',
             'birthday::verifyage',
+            'captcha::image',
+            'language::gettransdata',
             'login::form',
         ];
         return in_array($mome, $exceptions, true);
@@ -91,7 +94,7 @@ final class Module_Birthday extends GDO_Module
         return $age >= $minAge;
     }
     
-    public function getUserAge(GDO_User $user)
+    public function getUserBirthdate(GDO_User $user)
     {
         if (!($birthdate = $this->userSettingVar($user, 'birthday')))
         {
@@ -100,7 +103,32 @@ final class Module_Birthday extends GDO_Module
                 return null;
             }
         }
-        return Time::getAge($birthdate);
+        return $birthdate;
+    }
+    
+    public function getUserAge(GDO_User $user)
+    {
+        return Time::getAge($this->getUserBirthdate($user));
+    }
+    
+    public function hookOnRegister(GDT_Form $form, GDO_UserActivation $activation)
+    {
+        $user = GDO_User::current();
+        if ($birthdate = $this->getUserBirthdate($user))
+        {
+            $data = $activation->getValue('ua_data');
+            $data['birthday'] = $birthdate;
+            $activation->setValue('ua_data', $data);
+        }
+    }
+    
+    public function hookUserActivated(GDO_User $user, GDO_UserActivation $activation)
+    {
+        $data = $activation->getValue('ua_data');
+        if ($data['birthday'])
+        {
+            $this->saveUserSetting($user, 'birthday', $data['birthday']);
+        }
     }
     
     private function getUserAgeSession(GDO_User $user)
