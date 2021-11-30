@@ -19,7 +19,7 @@ use GDO\Register\GDO_UserActivation;
  * - Age verification for methods and global.
  * 
  * @author gizmore
- * @version 6.10.6
+ * @version 6.11.0
  * @since 6.10.1
  */
 final class Module_Birthday extends GDO_Module
@@ -52,8 +52,7 @@ final class Module_Birthday extends GDO_Module
     }
     
     /**
-     * On init, display other people birthdates.
-     * @TODO implement.
+     * @TODO implement: On init, display other people birthda[yte]s.
      */
     public function onInit()
     {
