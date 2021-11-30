@@ -82,6 +82,7 @@ final class Module_Birthday extends GDO_Module
             'captcha::image',
             'language::gettransdata',
             'login::form',
+        	'dsgvo::accept',
         ];
         return in_array($mome, $exceptions, true);
     }
