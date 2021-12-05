@@ -122,13 +122,16 @@ final class Module_Birthday extends GDO_Module
         }
     }
     
-    public function hookUserActivated(GDO_User $user, GDO_UserActivation $activation)
+    public function hookUserActivated(GDO_User $user, GDO_UserActivation $activation=null)
     {
-        $data = $activation->getValue('ua_data');
-        if ($data['birthday'])
-        {
-            $this->saveUserSetting($user, 'birthday', $data['birthday']);
-        }
+    	if ($activation)
+    	{
+	        $data = $activation->getValue('ua_data');
+	        if ($data['birthday'])
+	        {
+	            $this->saveUserSetting($user, 'birthday', $data['birthday']);
+	        }
+    	}
     }
     
     private function getUserAgeSession(GDO_User $user)
